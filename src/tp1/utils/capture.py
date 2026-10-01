@@ -87,6 +87,13 @@ class Capture:
         Sinon a cher que tout va bien
         """
 
+        sort = self.sort_network_protocols()
+        logger.info(f"Sorted protocols: {sort}")
+
+        self.summary = self._gen_summary()
+
+        return self.summary
+
 
     def get_summary(self) -> str:
         """
@@ -98,6 +105,7 @@ class Capture:
         """
         Generate summary
         """
+
         summary = ""
         return summary
 
@@ -105,6 +113,7 @@ class Capture:
 if __name__ == "__main__":
     capture = Capture("capture.pcap")
     capture.capture_traffic()
+    capture.analyse()
 
 
 
