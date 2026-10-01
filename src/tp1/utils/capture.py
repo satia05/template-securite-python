@@ -1,32 +1,37 @@
-from src.tp1.utils.lib import choose_interface
+from csv import Sniffer
+from itertools import count
+from unittest import result
+
+from scapy.all import *
+from scapy.all import rdpcap
+from scapy.layers.inet import TCP, UDP, ICMP
+from scapy.layers.l2 import Ether, ARP
+
 from tp1.utils.config import logger
+from pathlib import Path
+import os
 
 
 class Capture:
-    def __init__(self) -> None:
-        self.interface = choose_interface()
+    def __init__(self, pcap_file: str) -> None:
+        self.packet = []
         self.summary = ""
 
     def capture_traffic(self) -> None:
         """
-        Capture network traffic from an interface
+        Capture network traffic from a PCAP file
         """
-        interface = self.interface
-        logger.info(f"Capture traffic from interface {interface}")
 
-    def sort_network_protocols(self) -> str:
+
+
+
+    def sort_network_protocols(self) -> dict[str, int]:
         """
         Sort and return all captured network protocols
         """
-        return ""
 
-    def get_all_protocols(self) -> str:
-        """
-        Return all protocols captured with total packets number
-        """
-        return ""
 
-    def analyse(self, protocols: str) -> None:
+    def analyse(self) -> None:
         """
         Analyse all captured data and return statement
         Si un tra c est illégitime (exemple : Injection SQL, ARP
@@ -38,19 +43,13 @@ class Capture:
         attaquante.
         Sinon a cher que tout va bien
         """
-        all_protocols = self.get_all_protocols()
-        sort = self.sort_network_protocols()
-        logger.debug(f"All protocols: {all_protocols}")
-        logger.debug(f"Sorted protocols: {sort}")
 
-        self.summary = self._gen_summary()
 
     def get_summary(self) -> str:
         """
         Return summary
         :return:
         """
-        return self.summary
 
     def _gen_summary(self) -> str:
         """
@@ -58,3 +57,9 @@ class Capture:
         """
         summary = ""
         return summary
+
+
+
+
+
+
