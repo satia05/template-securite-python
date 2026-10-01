@@ -7,6 +7,9 @@ from scapy.all import rdpcap
 from scapy.layers.inet import TCP, UDP, ICMP
 from scapy.layers.l2 import Ether, ARP
 
+import matplotlib.pyplot as plt
+from reportlab.pdfgen import canvas
+
 from tp1.utils.config import logger
 from pathlib import Path
 import os
@@ -39,8 +42,6 @@ class Capture:
         self.packet = rdpcap(str(self.pcap_file))
 
 
-
-
     def sort_network_protocols(self) -> dict[str, int]:
         """
         Sort and return all captured network protocols
@@ -53,7 +54,9 @@ class Capture:
             "UDP": 0,
             "ICMP": 0,
         }
-
+        """
+        boucle qui cherche les protocols dans le packet et qui les ajoutes 1 par 1
+        """
         for p in self.packet:
 
             if p.haslayer(Ether):
@@ -101,19 +104,64 @@ class Capture:
         :return:
         """
 
+        return self.summary
+
+
     def _gen_summary(self) -> str:
         """
         Generate summary
         """
 
-        summary = ""
-        return summary
+        protocols = self.sort_network_protocols()
 
+        nom = list(protocols.keys())
+        val = list(protocols.values())
+
+        plt.bar(nom, val)                   # Créer les bars
+        plt.title("Volume des protocoles")
+        plt.xlabel("Protocoles")            # Donne le nom pour l'axe x
+        plt.ylabel("Nombre de paquets")     # Donne le nom pour l'axe y
+
+        plt.savefig("protocoles.png")
+        plt.close()
+
+        # PDF
+        pdf = canvas.Canvas("rapport.pdf")
+
+        pdf.drawString(50, 800, "Rapport du trafic réseau")
+
+        # Titre du tableau
+        pdf.drawString(50, 760, "Protocole")
+        pdf.drawString(200, 760, "Nombre de paquets")
+
+        y = 735
+
+        # Tableau
+        for protocol in protocols:
+            pdf.drawString(50, y, protocol)
+            pdf.drawString(200, y, str(protocols[protocol]))
+
+            y -= 20
+
+        # Graphique
+            pdf.drawImage(
+    "protocoles.png",
+        50,
+        300,
+        width=500,
+        height=300
+        )
+
+        pdf.save()
+
+
+        return "rapport.pdf"
 
 if __name__ == "__main__":
     capture = Capture("capture.pcap")
     capture.capture_traffic()
     capture.analyse()
+
 
 
 
