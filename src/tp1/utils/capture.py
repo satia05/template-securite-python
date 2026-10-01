@@ -4,7 +4,7 @@ from unittest import result
 
 from scapy.all import *
 from scapy.all import rdpcap
-from scapy.layers.inet import TCP, UDP, ICMP
+from scapy.layers.inet import TCP, UDP, ICMP, IP
 from scapy.layers.l2 import Ether, ARP
 
 import matplotlib.pyplot as plt
@@ -54,9 +54,9 @@ class Capture:
             "UDP": 0,
             "ICMP": 0,
         }
-        """
-        boucle qui cherche les protocols dans le packet et qui les ajoutes 1 par 1
-        """
+
+
+        # boucle qui cherche les protocoles dans le packet et qui les ajoutes 1 par 1
         for p in self.packet:
 
             if p.haslayer(Ether):
@@ -90,13 +90,39 @@ class Capture:
         Sinon a cher que tout va bien
         """
 
+        result = ""
+
+        for packet in self.packet:
+
+            #SQL
+            if packet.haslayer(Raw):
+                data = str(packet[Raw].load).lower()
+
+                if "union select" in data or "or 1=1" in data:
+                    result += " - Tentative injection SQL"
+
+                    if packet.haslayer(IP):
+                        result += " - IP : " + packet[IP].src
+
+                    result += "\n"
+
+            #ARP
+            if packet.haslayer(ARP):
+                if packet[ARP].op == 2:
+                    result += " - ARP suspect : " + packet[ARP].psrc + " - MAC :" + packet[ARP].hwsrc + "\n"
+                    self.summary += result
+
+        #log des attaques réseaux
+        logger.info(result)
+        print(result)
+
+        #trie de tout les protocoles
         sort = self.sort_network_protocols()
         logger.info(f"Sorted protocols: {sort}")
 
         self.summary = self._gen_summary()
 
         return self.summary
-
 
     def get_summary(self) -> str:
         """
