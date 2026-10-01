@@ -46,6 +46,33 @@ class Capture:
         Sort and return all captured network protocols
         """
 
+        protocols = {
+            "Ethernet": 0,
+            "ARP": 0,
+            "TCP": 0,
+            "UDP": 0,
+            "ICMP": 0,
+        }
+
+        for p in self.packet:
+
+            if p.haslayer(Ether):
+                protocols["Ethernet"] += 1
+
+            if p.haslayer(ARP):
+                protocols["ARP"] += 1
+
+            if p.haslayer(TCP):
+                protocols["TCP"] += 1
+
+            if p.haslayer(UDP):
+                protocols["UDP"] += 1
+
+            if p.haslayer(ICMP):
+                protocols["ICMP"] += 1
+
+        return protocols
+
 
     def analyse(self) -> None:
         """
