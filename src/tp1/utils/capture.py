@@ -14,6 +14,8 @@ import os
 
 class Capture:
     def __init__(self, pcap_file: str) -> None:
+        self.pcap_file = pcap_file
+        self.pcap_file = Path(__file__).parent.parent / "capture.pcap"
         self.packet = []
         self.summary = ""
 
@@ -21,6 +23,20 @@ class Capture:
         """
         Capture network traffic from a PCAP file
         """
+
+        """
+        interface = self.interface
+        logger.info(f"Capture traffic from interface {interface}")
+
+        sniff(iface=self.interface,
+              prn=self.capture_traffic,
+              count=5
+              )
+        """
+
+        logger.info(f"Reading PCAP file: {self.pcap_file}")
+
+        self.packet = rdpcap(str(self.pcap_file))
 
 
 
@@ -59,7 +75,9 @@ class Capture:
         return summary
 
 
-
+if __name__ == "__main__":
+    capture = Capture("capture.pcap")
+    capture.capture_traffic()
 
 
 
