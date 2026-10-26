@@ -1,20 +1,9 @@
-from src.tp1.utils.lib import hello_world, choose_interface
+from tp1.utils.lib import choose_interface, hello_world
 
 
-def test_when_hello_world_then_return_hello_world():
-    # Given
-    string = "hello world"
-
-    # When
-    result = hello_world()
-
-    # Then
-    assert result == string
+def test_hello_world():
+    assert hello_world() == "hello world"
 
 
-def test_when_choose_interface_then_return_empty_string():
-    # When
-    result = choose_interface()
-
-    # Then
-    assert result == ""
+def test_choose_interface():
+    assert choose_interface() == "en0"
