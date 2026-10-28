@@ -26,7 +26,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--out",
-        default="reports/tp2",
+        default=None,
         help="Dossier de sortie",
     )
     parser.add_argument(
@@ -50,6 +50,10 @@ def main(argv: list[str] | None = None) -> int:
             for fichier in dossier.iterdir()
             if fichier.is_file()
             and fichier.name not in {"GROUP.txt", "README.md"}
+            and not fichier.name.endswith((
+                ".triage.json",
+                ".triage.pdf",
+            ))
         )
 
     else:
@@ -65,7 +69,12 @@ def main(argv: list[str] | None = None) -> int:
         logger.error("Aucun échantillon à analyser")
         return 1
 
-    sortie = Path(args.out)
+    if args.out is not None:
+        sortie = Path(args.out)
+    elif args.file:
+        sortie = Path(args.file).parent
+    else:
+        sortie = Path("reports/tp2")
 
     try:
         sortie.mkdir(parents=True, exist_ok=True)
@@ -87,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
             )
 
             resultat = triage.run()
-            destination = sortie / f"{resultat['sha256']}.json"
+            destination = sortie / f"{fichier.name}.triage.json"
 
             report = Report(resultat)
             report.generate_json(str(destination))
@@ -102,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
                 fichier,
                 erreur,
             )
+
 
     logger.info(
         "Terminé : %s fichier(s) analysé(s), %s erreur(s)",

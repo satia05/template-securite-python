@@ -21,3 +21,12 @@ rule Custom_Download_And_Run
     condition:
         $download and $execute
 }
+
+rule Custom_Windows_Mutex
+{
+    strings:
+        $mutex = /(Global|Local)\\+[A-Za-z0-9_.{}-]{4,}/ ascii wide
+
+    condition:
+        $mutex
+}

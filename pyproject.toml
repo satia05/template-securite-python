@@ -11,6 +11,10 @@ packages = [
   { include = "tp3", from = "src" },
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests/tp2"]
+addopts = "--cov=src/tp2 --cov-report=term-missing --cov-report=json:coverage.json --cov-report=xml:coverage.xml"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.32.3"
@@ -36,6 +40,7 @@ pyx = "^0.17"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
+pytest-cov = "^7.1.0"
 
 [build-system]
 requires = ["poetry-core"]
