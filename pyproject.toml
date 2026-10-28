@@ -11,10 +11,6 @@ packages = [
   { include = "tp3", from = "src" },
 ]
 
-[tool.pytest.ini_options]
-testpaths = ["tests/tp2"]
-addopts = "--cov=src/tp2 --cov-report=term-missing --cov-report=json:coverage.json --cov-report=xml:coverage.xml"
-
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.32.3"
@@ -26,6 +22,9 @@ python-dotenv = "^1.2.1"
 lief = "^0.17"
 yara-python = "^4.5.1"
 python-magic = "^0.4.27"
+pytest = "^8.3.5"
+pytest-cov = "^7.1.0"
+coverage = "^7.17.0"
 # Module 3 - chaîne d'attaque (web + réseau)
 pytesseract = "^0.3.13"
 pillow = "^12.0"
