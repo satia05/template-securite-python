@@ -1,0 +1,23 @@
+rule Suspicious_Downloader {
+meta:
+author =
+"esgi"
+strings:
+$a =
+"urlmon.dll" nocase
+$b =
+"URLDownloadToFile" nocase
+$c = { 68 ?? ?? ?? ?? FF D0 } // push addr ; call eax
+condition:
+2 of them
+}
+
+rule Custom_Download_And_Run
+{
+    strings:
+        $download = "URLDownloadToFileA" ascii wide
+        $execute = "WinExec" ascii wide
+
+    condition:
+        $download and $execute
+}
